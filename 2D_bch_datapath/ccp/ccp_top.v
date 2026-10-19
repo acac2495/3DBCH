@@ -8,15 +8,13 @@
 `include "../common/root_to_coeff_comb.v"
 `include "../IDFFFT/idffft_synd.v"
 
-module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, corrected_res, c_out, pass);
+module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, corrected_res, c_out);
     input [N*N-1:0] r_in;
     input clk, rst;
     input start;
 
     //output reg done;
-    output reg pass;
     output done;
-    output [N*N-1:0] corrected_res;
     output [N*N-1:0] c_out;
 
     integer f;
@@ -540,7 +538,7 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
         .c_out(c_out)
     );
 
-    assign corrected_res = c_out ^ r_in_captured1;
+
 
     /*always @(posedge clk) begin
         if(rst) begin
@@ -580,7 +578,7 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
 
     integer p,q;
 
-    always @(posedge clk) begin
+    /*always @(posedge clk) begin
         if(col_done_flag_reg) begin
             $display("Received Code Word : ");
             for (p = 0; p < N; p = p + 1) begin
@@ -705,7 +703,7 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
                 $display("");
             end
         end
-        if(done /*&&  ~|corrected_res*/) begin
+        if(done &&  ~|corrected_res) begin
             $display("full syndrome after row recursive extension : ");
             for(p = 0; p < N; p = p + 1) begin
                 for(q = 0; q < N; q = q + 1) begin
@@ -744,5 +742,5 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
                 $display("");
             end
         end 
-    end
+    end*/
 endmodule
