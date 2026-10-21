@@ -8,7 +8,7 @@
 `include "../common/root_to_coeff_comb.v"
 `include "../IDFFFT/idffft_synd.v"
 
-module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, corrected_res, c_out);
+module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c_out);
     input [N*N-1:0] r_in;
     input clk, rst;
     input start;
