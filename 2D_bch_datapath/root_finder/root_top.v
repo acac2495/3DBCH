@@ -1,4 +1,4 @@
-`include "../root_finder/poly_i.v"
+`include "../2D_bch_datapath/root_finder/poly_i.v"
 
 module root_top #(parameter T = 2, N = 15, M = 4) (c_in, rpos);
     input [(T+1)*M-1:0] c_in;

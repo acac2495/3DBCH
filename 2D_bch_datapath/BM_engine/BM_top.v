@@ -1,5 +1,5 @@
-`include "../common/GF_2_4_mult.v"
-`include "../common/GF_2_4_inv.v"
+`include "../2D_bch_datapath/common/GF_2_4_mult.v"
+`include "../2D_bch_datapath/common/GF_2_4_inv.v"
 
 module BM_top #(parameter T = 2, M = 4) (clk, rst, start, S_in, done, sigma_out, done_del, bm_busy, deg_out);
     input clk, rst, start;

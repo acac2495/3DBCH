@@ -1,6 +1,6 @@
-`include "../IDFFFT/class_1.v"
-`include "../IDFFFT/class_2.v"
-`include "../IDFFFT/class_4.v"
+`include "../2D_bch_datapath/IDFFFT/class_1.v"
+`include "../2D_bch_datapath/IDFFFT/class_2.v"
+`include "../2D_bch_datapath/IDFFFT/class_4.v"
 //`include "../common/xor_tree.v"
 
 module idffft_top #(parameter COUNT_1 = 1, COUNT_2 = 4, COUNT_4 = 43, M = 4, I = 0, IP = 0) (classes, c_out);
@@ -19,7 +19,7 @@ module idffft_top #(parameter COUNT_1 = 1, COUNT_2 = 4, COUNT_4 = 43, M = 4, I =
     localparam [7:0] IP_ONES = (8'd48 + (IP % 10)) & 8'hFF;
 
     localparam  FILE_P = {
-        "../IDFFFT/alpha_", I_TENS, I_ONES, "_", IP_TENS, IP_ONES, ".hex"
+        "../2D_bch_datapath/IDFFFT/alpha_", I_TENS, I_ONES, "_", IP_TENS, IP_ONES, ".hex"
     };
 
     initial begin

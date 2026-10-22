@@ -1,4 +1,4 @@
-`include "../IDFFFT/idffft_top.v"
+`include "../2D_bch_datapath/IDFFFT/idffft_top.v"
 
 module idffft_synd #(parameter COUNT_1 = 1, COUNT_2 = 4, COUNT_4 = 54, M = 4, N = 15) (classes, c_out);
     localparam TOTAL_CLASSES = COUNT_1 + COUNT_2 + COUNT_4;

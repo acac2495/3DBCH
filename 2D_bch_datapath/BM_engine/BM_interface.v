@@ -1,4 +1,4 @@
-`include "../BM_engine/BM_top.v"
+`include "../2D_bch_datapath/BM_engine/BM_top.v"
 
 module BM_interface #(parameter T = 2, M = 4) (clk, rst, synd, done, sigma_out, start, bm_busy, deg_out);
     input clk, rst, start;

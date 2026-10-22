@@ -1,7 +1,6 @@
 `include "../2D_bch_datapath/ccp/ccp_top.v"
 
 module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rst, start_3d, load_3d, done_3d, fail_3d, iters, cube_in);
-
     input clk, rst, start_3d, load_3d;
     input [N*N*N-1:0] cube_in;
     
@@ -95,6 +94,35 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
     integer i;
     integer lx, ly, lz;
 
+    wire check1;
+
+    assign check1 = (r_in_2d == err_2d);
+
+    task print_arr;
+        input [N*N-1:0] arr_in;
+        integer p, q;
+        begin
+            for(p = 0; p < N; p = p + 1) begin
+                for(q = 0; q < N; q = q + 1) begin
+                    $write("%b ", arr_in[N*p + q]);
+                end
+                $display("");
+            end
+        end
+    endtask
+
+    function [2*8-1:0] pr_or;
+        input [1:0] pass_idx;
+        begin
+            case(pass_idx)
+                2'b00 : pr_or = "xy";
+                2'b01 : pr_or = "xz";
+                2'b10 : pr_or = "yz";
+                default : pr_or = "xy";
+            endcase
+        end
+    endfunction
+
     //super FSM
 
     always @(posedge clk) begin
@@ -160,7 +188,20 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
                 end
 
                 VERIFY : begin
-
+                    if(r_in_2d != 0) begin
+                        $display("decoded slice : ");
+                        print_arr(r_in_2d);
+                        $display("received error : ");
+                        print_arr(err_2d);
+                    end
+                    if(~check1) begin
+                        $display("invalid error, slice correction rejected");
+                        err_2d <= 0;
+                    end
+                    else if(check1 & (r_in_2d != 0))begin
+                        $display("slice corrected");
+                    end
+                    state <= UPDATE;
                 end
 
                 UPDATE : begin
@@ -182,6 +223,7 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
 
                 NEXT : begin
                     view_idx <= 0;
+                    $display("done iter : %0d, pass : %s, flips upto %s pass : %0d", iters, pr_or(pass_idx), pr_or(pass_idx), sweep_flips);
                     if(pass_idx != 2) begin
                         pass_idx <= pass_idx + 1;
                         state <= SEND;

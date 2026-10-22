@@ -19,8 +19,8 @@ module dffft_top #(parameter M = 4, T = 2, N = 15) (c_in, C_out);
 
 endmodule*/
 
-`include "../DFFFT/dffft_unit.v"
-`include "../common/gf16_square.v"
+`include "../2D_bch_datapath/DFFFT/dffft_unit.v"
+`include "../2D_bch_datapath/common/gf16_square.v"
 
 module dffft_top #(parameter M = 4, T = 2, N = 15) (
     input  [N*N-1:0] c_in,

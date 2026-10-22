@@ -1,4 +1,4 @@
-`include "../recursive_extension/RE_base.v"
+`include "../2D_bch_datapath/recursive_extension/RE_base.v"
 
 module RE_chain #(parameter T = 2, M = 4, NUM_STAGES = 11) (c_in, S_init, S_out_all);
     input  [T*M-1:0] c_in;

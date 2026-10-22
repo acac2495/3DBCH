@@ -1,12 +1,12 @@
-`include "../DFFFT/dffft_top.v"
-`include "../BM_engine/BM_interface.v"
-`include "../root_finder/root_top.v"
-`include "../common/or_tree.v"
-`include "../root_finder/root_lookup.v"
-`include "../common/roots_to_coeffs.v"
-`include "../recursive_extension/RE_chain.v"
-`include "../common/root_to_coeff_comb.v"
-`include "../IDFFFT/idffft_synd.v"
+`include "../2D_bch_datapath/DFFFT/dffft_top.v"
+`include "../2D_bch_datapath/BM_engine/BM_interface.v"
+`include "../2D_bch_datapath/root_finder/root_top.v"
+`include "../2D_bch_datapath/common/or_tree.v"
+`include "../2D_bch_datapath/root_finder/root_lookup.v"
+`include "../2D_bch_datapath/common/roots_to_coeffs.v"
+`include "../2D_bch_datapath/recursive_extension/RE_chain.v"
+`include "../2D_bch_datapath/common/root_to_coeff_comb.v"
+`include "../2D_bch_datapath/IDFFFT/idffft_synd.v"
 
 module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c_out);
     input [N*N-1:0] r_in;
@@ -124,7 +124,7 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
         for (j = 1; j <= 2*T; j = j + 1) begin : FULL_COL_GATHER
             for (k = 1; k <= 2*T; k = k + 1) begin : STACK
                 assign col_synd_int[j-1][M*k-1 -: M] =
-                    S_2t_reg1[ ((k-1)*2*T + (j-1) + 1) * M - 1 -: M ];
+                    S_2t_reg[ ((k-1)*2*T + (j-1) + 1) * M - 1 -: M ];
             end
         end
     endgenerate
@@ -538,17 +538,6 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
         .c_out(c_out)
     );
 
-
-
-    /*always @(posedge clk) begin
-        if(rst) begin
-            done <= 0;
-        end
-        else begin
-            done <= row_re_done_reg;
-        end
-    end*/
-
     assign done = row_re_done_reg;
 
     function [8*6-1:0] gf_str;
@@ -578,8 +567,10 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
 
     integer p,q;
 
-    /*always @(posedge clk) begin
-        if(col_done_flag_reg) begin
+    //debug statements
+
+    always @(posedge clk) begin
+        /*if(col_done_flag_reg) begin
             $display("Received Code Word : ");
             for (p = 0; p < N; p = p + 1) begin
                 for (q = 0; q < N; q = q + 1) begin
@@ -702,9 +693,9 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
                 end
                 $display("");
             end
-        end
-        if(done &&  ~|corrected_res) begin
-            $display("full syndrome after row recursive extension : ");
+        end*/
+        if(done & (r_in_captured != 0)) begin
+            /*$display("full syndrome after row recursive extension : ");
             for(p = 0; p < N; p = p + 1) begin
                 for(q = 0; q < N; q = q + 1) begin
                     $write("%s ", gf_str(synd_full_reg[p][(q+1)*M-1 -: M]));
@@ -715,15 +706,15 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
             for (c = 0; c < TOTAL_CLASSES; c = c + 1) begin
                 $write("%s ", gf_str(classes[M*(c+1)-1 -: M]));
             end
-            $display("");
+            $display("");*/
             
             //$fdisplay(fail_fd, "%h", r_in_captured1);    
             //$fflush(fail_fd);                            
             
-            $display("Received Code Word : ");
+            /*$display("Received Code Word : ");
             for (p = 0; p < N; p = p + 1) begin
                 for (q = 0; q < N; q = q + 1) begin
-                    $write("%b ", r_in_captured1[N*p + q]);
+                    $write("%b ", r_in_captured[N*p + q]);
                 end
                 $display("");
             end
@@ -733,14 +724,7 @@ module ccp_top #(parameter T = 2, M = 4, N = 15) (clk, rst, r_in, start, done, c
                     $write("%b ", c_out[N*p + q]);
                 end
                 $display("");
-            end  
-            $display("Corrected result : ");
-            for(p = 0; p < N; p = p + 1) begin
-                for(q = 0; q < N; q = q + 1) begin
-                    $write("%b ", corrected_res[N*p + q]);
-                end
-                $display("");
-            end
+            end*/  
         end 
-    end*/
+    end
 endmodule

@@ -14,10 +14,10 @@ module poly_i #(parameter T = 2, M = 4, REF = 1) (c_in, out_bit);
     wire [(T+1) * M - 1 : 0] out_comp_flat;
 
     reg [M-1:0] coeffs [0:T];
-    reg [8*32-1:0] file_name;
+    reg [8*128-1:0] file_name;
     
     initial begin
-        $sformat(file_name, "../root_finder/poly_%0d.hex", REF);
+        $sformat(file_name, "../2D_bch_datapath/root_finder/poly_%0d.hex", REF);
         $readmemh(file_name, coeffs);
     end
 

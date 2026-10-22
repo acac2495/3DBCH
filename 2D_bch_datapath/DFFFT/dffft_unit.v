@@ -1,5 +1,5 @@
-`include "../DFFFT/mux.v"
-`include "../DFFFT/xor_tree.v"
+`include "../2D_bch_datapath/DFFFT/mux.v"
+`include "../2D_bch_datapath/DFFFT/xor_tree.v"
 
 module dffft_unit #(
     parameter N = 15, 
@@ -15,7 +15,7 @@ module dffft_unit #(
     genvar i, j;
     reg [M-1:0] mem [0:N*N-1];
 
-    localparam FILE_P = {"../DFFFT/dfft_", J, "_", JP, ".hex"};
+    localparam FILE_P = {"../2D_bch_datapath/DFFFT/dfft_", J, "_", JP, ".hex"};
 
     initial begin
         $readmemh(FILE_P, mem);
