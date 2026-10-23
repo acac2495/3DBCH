@@ -1,11 +1,12 @@
 `include "../2D_bch_datapath/ccp/ccp_top.v"
 
-module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rst, start_3d, load_3d, done_3d, fail_3d, iters, cube_in);
+module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rst, start_3d, load_3d, done_3d, fail_3d, iters, cube_in, cube_out);
     input clk, rst, start_3d, load_3d;
     input [N*N*N-1:0] cube_in;
     
     output reg done_3d, fail_3d;
     output reg [7:0] iters;
+    output [N*N*N-1:0] cube_out;
 
     localparam IDLE = 0;
     localparam LOAD = 1;
@@ -251,4 +252,12 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
             endcase
         end
     end
+
+    genvar gx;
+    generate
+        for (gx = 0; gx < N; gx = gx + 1) begin : CUBE_OUT
+            assign cube_out[gx*N*N +: N*N] = yz_arr[gx];
+        end
+    endgenerate
+
 endmodule

@@ -15,6 +15,7 @@ module tb_slices;
 
     wire done_3d, fail_3d;
     wire [7:0] iters;
+    wire [N*N*N-1:0] cube_out;
 
     slice_scheduler #(.M(M), .T(T), .N(N), .MAX_ITER(MAX_ITER)) DUT(
         .clk(clk),
@@ -24,7 +25,8 @@ module tb_slices;
         .done_3d(done_3d),
         .fail_3d(fail_3d),
         .iters(iters),
-        .cube_in(cube_in)
+        .cube_in(cube_in),
+        .cube_out(cube_out)
     );
 
     always #5 clk = ~clk;
@@ -51,6 +53,9 @@ module tb_slices;
         start_3d <= 1; @(posedge clk); start_3d <= 0;
         wait (done_3d);
         $display("done: fail_3d=%b iters=%0d", fail_3d, iters);
+        if(|cube_out == 0) begin
+            $display("fully cleaned");
+        end
         $finish;
     end
 
