@@ -41,10 +41,13 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
                        yz_arr[view_idx];
 
     reg any;
+    //reg [$clog2(N)-1:0] sr, sc;   
     reg [IW-1:0] rsel, csel;
     reg [IW-1:0] ux, uy, uz;
 
     integer i1, j1;
+
+    //priority encoder hardware (may be recursive)
 
     always @(*) begin
         any = 0; 
@@ -62,6 +65,22 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
             end
         end
     end
+
+    /*reg [N-1:0] row_bits;
+
+    always @(*) begin
+        any = 0; rsel = 0; csel = 0; row_bits = 0;
+        for (i1 = N-1; i1 >= 0; i1 = i1-1) begin
+            if (|err_2d[i1*N +: N]) begin
+                any = 1;
+                rsel = i1;
+                row_bits = err_2d[i1*N +: N];
+            end
+        end
+        for (j1 = N-1; j1 >= 0; j1 = j1-1) begin
+            if (row_bits[j1]) csel = j1;
+        end
+    end*/
 
     always @(*) begin
         case(pass_idx)
@@ -206,6 +225,7 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
                 end
 
                 UPDATE : begin
+                    //priority encoder case
                     if(any) begin
                         err_2d[rsel*N + csel] <= 1'b0;
                         xy_arr[uz][ux*N+uy] <= ~xy_arr[uz][ux*N+uy];
@@ -219,7 +239,7 @@ module slice_scheduler #(parameter N = 15, M = 4, T = 2, MAX_ITER = 100)(clk, rs
                     else begin
                         view_idx <= view_idx + 1;
                         state <= SEND;
-                    end
+                    end 
                 end
 
                 NEXT : begin
